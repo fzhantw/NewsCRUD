@@ -100,4 +100,19 @@ class Article extends Model
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+
+    public function getExcerptAttribute()
+    {
+        $content = $this->content;
+
+        $matches = null;
+
+        preg_match('/<p[^\>]*>([^\<]+)<\/p>/', $content, $matches);
+
+        if (!$matches) {
+            return '';
+        } else {
+            return $matches[1];
+        }
+    }
 }
