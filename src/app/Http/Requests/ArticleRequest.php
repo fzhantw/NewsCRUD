@@ -3,6 +3,7 @@
 namespace Backpack\NewsCRUD\app\Http\Requests;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class ArticleRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
 {
@@ -26,7 +27,8 @@ class ArticleRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
     {
         return [
             'title' => 'required|min:2|max:255',
-            'slug' => 'unique:articles,slug,'.\Request::get('id'),
+//            'slug' => 'unique:articles,slug,'.\Request::get('id'),
+            'slug' => Rule::unique('articles')->where('category_id', \Request::get('category_id'))->whereNot('id', \Request::get('id')),
             'content' => 'required|min:2',
             'date' => 'required|date',
             'status' => 'required',
@@ -42,7 +44,7 @@ class ArticleRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
     public function attributes()
     {
         return [
-            //
+            'slug' => 'slug(網址)'
         ];
     }
 
@@ -54,7 +56,7 @@ class ArticleRequest extends \Backpack\CRUD\app\Http\Requests\CrudRequest
     public function messages()
     {
         return [
-            //
+            'slug.unique' => '同分類下的 Slug 值必須唯一',
         ];
     }
 }

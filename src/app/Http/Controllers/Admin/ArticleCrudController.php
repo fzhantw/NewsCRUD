@@ -82,6 +82,14 @@ class ArticleCrudController extends CrudController
                                 'label' => 'Date',
                                 'type' => 'date',
                             ], 'update');
+        $this->crud->addField([    // SELECT
+            'label' => 'Category',
+            'type' => 'select2',
+            'name' => 'category_id',
+            'entity' => 'category',
+            'attribute' => 'name',
+            'model' => "Backpack\NewsCRUD\app\Models\Category",
+        ]);
 
         $this->crud->addField([    // WYSIWYG
                                 'name' => 'content',
@@ -94,23 +102,15 @@ class ArticleCrudController extends CrudController
                                 'label' => 'Image',
                                 'type' => 'browse',
                             ]);
-        $this->crud->addField([    // SELECT
-                                'label' => 'Category',
-                                'type' => 'select2',
-                                'name' => 'category_id',
-                                'entity' => 'category',
-                                'attribute' => 'name',
-                                'model' => "Backpack\NewsCRUD\app\Models\Category",
-                            ]);
-        $this->crud->addField([       // Select2Multiple = n-n relationship (with pivot table)
-                                'label' => 'Tags',
-                                'type' => 'select2_multiple',
-                                'name' => 'tags', // the method that defines the relationship in your Model
-                                'entity' => 'tags', // the method that defines the relationship in your Model
-                                'attribute' => 'name', // foreign key attribute that is shown to user
-                                'model' => "Backpack\NewsCRUD\app\Models\Tag", // foreign key model
-                                'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
-                            ]);
+//        $this->crud->addField([       // Select2Multiple = n-n relationship (with pivot table)
+//                                'label' => 'Tags',
+//                                'type' => 'select2_multiple',
+//                                'name' => 'tags', // the method that defines the relationship in your Model
+//                                'entity' => 'tags', // the method that defines the relationship in your Model
+//                                'attribute' => 'name', // foreign key attribute that is shown to user
+//                                'model' => "Backpack\NewsCRUD\app\Models\Tag", // foreign key model
+//                                'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
+//                            ]);
         $this->crud->addField([    // ENUM
                                 'name' => 'status',
                                 'label' => 'Status',
@@ -127,6 +127,9 @@ class ArticleCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        if (!$request->input('slug')) {
+            $request->request->set('slug', time());
+        }
         return parent::storeCrud();
     }
 
