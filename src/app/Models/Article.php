@@ -76,7 +76,7 @@ class Article extends Model
     {
         return $query->where('status', 'PUBLISHED')
                     ->where('date', '<=', date('Y-m-d'))
-                    ->orderBy('date', 'DESC');
+                    ->orderBy('updated_at', 'DESC');
     }
 
     /*
